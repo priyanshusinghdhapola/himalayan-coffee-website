@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# production
+build/
+
+# env — keep the example only
+.env
+.env*.local
+
+# vercel
+.vercel
+
+# Raw Higgsfield exports (multi-GB masters). Only the processed files in
+# public/media are committed; see docs/03-deployment.md.
+media-src/*
+!media-src/README.md
+
+# logs / OS
+npm-debug.log*
+*.log
+.DS_Store
+Thumbs.db

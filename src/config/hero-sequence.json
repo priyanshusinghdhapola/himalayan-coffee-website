@@ -1,0 +1,19 @@
+{
+  "$comment": "Written by `npm run media:hero`. frames: 0 means no sequence yet — the hero renders its procedural Himalaya scene instead.",
+  "landscape": {
+    "frames": 0,
+    "dir": "hero/desktop",
+    "ext": "webp",
+    "pad": 4,
+    "width": 1600,
+    "height": 900
+  },
+  "portrait": {
+    "frames": 0,
+    "dir": "hero/mobile",
+    "ext": "webp",
+    "pad": 4,
+    "width": 720,
+    "height": 1280
+  }
+}

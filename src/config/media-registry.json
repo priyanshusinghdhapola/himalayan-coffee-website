@@ -1,0 +1,193 @@
+{
+  "$comment": "Single source of truth for every Higgsfield asset. IDs match docs/02-higgsfield-prompts.md. Paths are relative to public/media/. `width` is the export width used by `npm run media:stills`. Run `npm run media:check` to see which files are still missing.",
+  "assets": {
+    "BRAND": {
+      "path": "brand/mahve-signage.webp",
+      "kind": "image",
+      "usedIn": "Story — framed brand plate",
+      "spec": "Square, 1254×1254 or larger, WebP",
+      "prompt": "L1",
+      "width": 1254
+    },
+    "S1": {
+      "path": "story/himalaya-village.webp",
+      "kind": "image",
+      "usedIn": "Story — wide establishing plate behind the stats",
+      "spec": "2400×1350 (16:9) WebP, ≤ 400 KB",
+      "prompt": "S1",
+      "width": 2400
+    },
+    "P1": {
+      "path": "products/buransh-pack.webp",
+      "kind": "image",
+      "usedIn": "Collection + /coffee/buransh — packshot",
+      "spec": "1600×2000 (4:5) WebP on #0b0907 background, ≤ 300 KB",
+      "prompt": "P1",
+      "width": 1600
+    },
+    "P2": {
+      "path": "products/kafal-pack.webp",
+      "kind": "image",
+      "usedIn": "Collection + /coffee/kafal — packshot",
+      "spec": "1600×2000 (4:5) WebP on #0b0907 background, ≤ 300 KB",
+      "prompt": "P2",
+      "width": 1600
+    },
+    "P3": {
+      "path": "products/deodar-pack.webp",
+      "kind": "image",
+      "usedIn": "Collection + /coffee/deodar — packshot",
+      "spec": "1600×2000 (4:5) WebP on #0b0907 background, ≤ 300 KB",
+      "prompt": "P3",
+      "width": 1600
+    },
+    "P4": {
+      "path": "products/dhauladhar-pack.webp",
+      "kind": "image",
+      "usedIn": "Collection + /coffee/dhauladhar — packshot",
+      "spec": "1600×2000 (4:5) WebP on #0b0907 background, ≤ 300 KB",
+      "prompt": "P4",
+      "width": 1600
+    },
+    "P1S": {
+      "path": "products/buransh-scene.webp",
+      "kind": "image",
+      "usedIn": "/coffee/buransh — full-bleed hero scene",
+      "spec": "2400×1350 (16:9) WebP, ≤ 400 KB",
+      "prompt": "P1S",
+      "width": 2400
+    },
+    "P2S": {
+      "path": "products/kafal-scene.webp",
+      "kind": "image",
+      "usedIn": "/coffee/kafal — full-bleed hero scene",
+      "spec": "2400×1350 (16:9) WebP, ≤ 400 KB",
+      "prompt": "P2S",
+      "width": 2400
+    },
+    "P3S": {
+      "path": "products/deodar-scene.webp",
+      "kind": "image",
+      "usedIn": "/coffee/deodar — full-bleed hero scene",
+      "spec": "2400×1350 (16:9) WebP, ≤ 400 KB",
+      "prompt": "P3S",
+      "width": 2400
+    },
+    "P4S": {
+      "path": "products/dhauladhar-scene.webp",
+      "kind": "image",
+      "usedIn": "/coffee/dhauladhar — full-bleed hero scene",
+      "spec": "2400×1350 (16:9) WebP, ≤ 400 KB",
+      "prompt": "P4S",
+      "width": 2400
+    },
+    "C1": {
+      "path": "craft/harvest.webp",
+      "kind": "image",
+      "usedIn": "Craft bento — large tile",
+      "spec": "1600×1600 (1:1) WebP, ≤ 300 KB",
+      "prompt": "C1",
+      "width": 1600
+    },
+    "C2": {
+      "path": "craft/drying.webp",
+      "kind": "image",
+      "usedIn": "Craft bento — wide tile",
+      "spec": "2000×1000 (2:1) WebP, ≤ 300 KB",
+      "prompt": "C2",
+      "width": 2000
+    },
+    "C3": {
+      "path": "craft/roasting.webp",
+      "kind": "image",
+      "usedIn": "Craft bento — small tile",
+      "spec": "1200×1200 (1:1) WebP, ≤ 250 KB",
+      "prompt": "C3",
+      "width": 1200
+    },
+    "C4": {
+      "path": "craft/brewing.webp",
+      "kind": "image",
+      "usedIn": "Craft bento — small tile",
+      "spec": "1200×1200 (1:1) WebP, ≤ 250 KB",
+      "prompt": "C4",
+      "width": 1200
+    },
+    "U1": {
+      "path": "upcoming/loop-desktop.mp4",
+      "kind": "video",
+      "usedIn": "Upcoming — background loop (H.264, landscape)",
+      "spec": "1920×1080, 8–12 s seamless loop, no audio, ≤ 8 MB — produced by `npm run media:loop`",
+      "prompt": "U1"
+    },
+    "U1W": {
+      "path": "upcoming/loop-desktop.webm",
+      "kind": "video",
+      "usedIn": "Upcoming — background loop (VP9, landscape)",
+      "spec": "Produced by `npm run media:loop`",
+      "prompt": "U1"
+    },
+    "U1M": {
+      "path": "upcoming/loop-mobile.mp4",
+      "kind": "video",
+      "usedIn": "Upcoming — background loop (H.264, portrait)",
+      "spec": "720×1280, ≤ 4 MB — produced by `npm run media:loop`",
+      "prompt": "U1"
+    },
+    "U1P": {
+      "path": "upcoming/loop-poster.webp",
+      "kind": "image",
+      "usedIn": "Upcoming — poster shown before/without the loop",
+      "spec": "Produced by `npm run media:loop`",
+      "prompt": "U1"
+    },
+    "U2": {
+      "path": "upcoming/kinnaur-apple-cask.webp",
+      "kind": "image",
+      "usedIn": "Upcoming — concept blend card",
+      "spec": "1600×1200 (4:3) WebP, ≤ 300 KB",
+      "prompt": "U2",
+      "width": 1600
+    },
+    "U3": {
+      "path": "upcoming/bugyal-reserve.webp",
+      "kind": "image",
+      "usedIn": "Upcoming — concept blend card",
+      "spec": "1600×1200 (4:3) WebP, ≤ 300 KB",
+      "prompt": "U3",
+      "width": 1600
+    },
+    "U4": {
+      "path": "upcoming/kesar-kahwa.webp",
+      "kind": "image",
+      "usedIn": "Upcoming — concept blend card",
+      "spec": "1600×1200 (4:3) WebP, ≤ 300 KB",
+      "prompt": "U4",
+      "width": 1600
+    },
+    "U5": {
+      "path": "upcoming/brass-dripper.webp",
+      "kind": "image",
+      "usedIn": "Upcoming — object card",
+      "spec": "1600×1200 (4:3) WebP, ≤ 300 KB",
+      "prompt": "U5",
+      "width": 1600
+    },
+    "U6": {
+      "path": "upcoming/kullu-brew-kit.webp",
+      "kind": "image",
+      "usedIn": "Upcoming — object card",
+      "spec": "1600×1200 (4:3) WebP, ≤ 300 KB",
+      "prompt": "U6",
+      "width": 1600
+    },
+    "U7": {
+      "path": "upcoming/deodar-slate-set.webp",
+      "kind": "image",
+      "usedIn": "Upcoming — object card",
+      "spec": "1600×1200 (4:3) WebP, ≤ 300 KB",
+      "prompt": "U7",
+      "width": 1600
+    }
+  }
+}

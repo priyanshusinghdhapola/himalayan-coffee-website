@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Mahvé design tokens
+   Palette pulled from the brand signage: hearth-dark stone, temple-brass
+   gold, parchment cream, and the rust / saffron / deodar-green of a Kullu
+   shawl border.
+   ───────────────────────────────────────────────────────────────────────── */
+@theme {
+  --color-ink: #0b0907;
+  --color-night: #120e0b;
+  --color-stone: #1a1511;
+  --color-bark: #251e18;
+  --color-gold: #c9a46a;
+  --color-gold-bright: #e6c68e;
+  --color-gold-deep: #8d6d40;
+  --color-cream: #f3ead9;
+  --color-parchment: #d9ccb6;
+  --color-mist: #a3978a;
+  --color-smoke: #6f655b;
+  --color-kullu: #a8412c;
+  --color-saffron: #d98e32;
+  --color-deodar: #4f6b58;
+  --color-glacier: #dfe6e8;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout-expo: cubic-bezier(0.87, 0, 0.13, 1);
+
+  --breakpoint-3xl: 112rem;
+
+  --animate-drift: drift 26s ease-in-out infinite alternate;
+  --animate-drift-slow: drift 40s ease-in-out infinite alternate-reverse;
+  --animate-scroll-cue: scroll-cue 2.4s var(--ease-inout-expo) infinite;
+
+  @keyframes drift {
+    from { transform: translate3d(-8%, 0, 0) scale(1.05); }
+    to { transform: translate3d(8%, -3%, 0) scale(1.12); }
+  }
+
+  @keyframes scroll-cue {
+    0% { transform: scaleY(0); transform-origin: top; }
+    45% { transform: scaleY(1); transform-origin: top; }
+    55% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+}
+
+/* next/font exposes the families as CSS variables on <html>. */
+@theme inline {
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-caps: var(--font-cinzel), "Cinzel", Georgia, serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-deva: var(--font-tiro), "Tiro Devanagari Hindi", "Nirmala UI", "Kohinoor Devanagari", serif;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 1.5px solid var(--color-gold-bright);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Film grain over everything — static texture, composited once. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  dialog::backdrop {
+    background: rgb(11 9 7 / 0.72);
+    backdrop-filter: blur(6px);
+  }
+}
+
+/* ── Utilities ─────────────────────────────────────────────────────────── */
+
+/* Small tracked capitals — the "COFFEE" line of the signage. */
+@utility eyebrow {
+  font-family: var(--font-caps);
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+/* Readable glass over moving video: dark tinted base + blur + brass hairline. */
+@utility glass {
+  background: linear-gradient(150deg, rgb(30 24 19 / 0.62), rgb(11 9 7 / 0.42));
+  border: 1px solid rgb(230 198 142 / 0.16);
+  box-shadow:
+    inset 0 1px 0 rgb(255 240 215 / 0.07),
+    0 30px 80px -30px rgb(0 0 0 / 0.75);
+  -webkit-backdrop-filter: blur(22px) saturate(135%);
+  backdrop-filter: blur(22px) saturate(135%);
+}
+
+/* Kullu shawl border — rust rails, saffron teeth, brass & deodar lozenges. */
+@utility kullu-band {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='24' viewBox='0 0 64 24'%3E%3Crect width='64' height='24' fill='%230b0907'/%3E%3Cpath d='M0 0h64v2H0zM0 22h64v2H0z' fill='%23a8412c'/%3E%3Cpath d='M0 2l4 3.5L8 2l4 3.5L16 2l4 3.5L24 2l4 3.5L32 2l4 3.5L40 2l4 3.5L48 2l4 3.5L56 2l4 3.5L64 2z' fill='%23d98e32'/%3E%3Cpath d='M0 22l4 -3.5L8 22l4 -3.5L16 22l4 -3.5L24 22l4 -3.5L32 22l4 -3.5L40 22l4 -3.5L48 22l4 -3.5L56 22l4 -3.5L64 22z' fill='%23d98e32'/%3E%3Cpath d='M16 6.5l5.5 5.5-5.5 5.5-5.5-5.5z' fill='%23c9a46a'/%3E%3Cpath d='M16 9l3 3-3 3-3-3z' fill='%230b0907'/%3E%3Cpath d='M16 10.6l1.4 1.4-1.4 1.4-1.4-1.4z' fill='%23a8412c'/%3E%3Cpath d='M48 6.5l5.5 5.5-5.5 5.5-5.5-5.5z' fill='%234f6b58'/%3E%3Cpath d='M48 9l3 3-3 3-3-3z' fill='%23f3ead9'/%3E%3Cpath d='M48 10.6l1.4 1.4-1.4 1.4-1.4-1.4z' fill='%23a8412c'/%3E%3Ccircle cx='32' cy='12' r='1.5' fill='%23c9a46a'/%3E%3Ccircle cx='0' cy='12' r='1.5' fill='%23c9a46a'/%3E%3Ccircle cx='64' cy='12' r='1.5' fill='%23c9a46a'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  background-position: center;
+}
+
+@utility text-shadow-soft {
+  text-shadow: 0 2px 24px rgb(0 0 0 / 0.55);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Browsers without backdrop-filter get an opaque panel so copy stays legible. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: rgb(18 14 11 / 0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
