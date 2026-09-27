@@ -17,7 +17,7 @@ type Status = "idle" | "loading" | "done" | "error";
 export function WaitlistForm({
   list,
   cta = "Join the waitlist",
-  successMessage = "You're on the list. We'll write before it comes down the mountain.",
+  successMessage = "Thank you — you're on the list.",
   className,
 }: WaitlistFormProps) {
   const id = useId();

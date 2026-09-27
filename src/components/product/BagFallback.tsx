@@ -17,7 +17,7 @@ export function BagFallback({ product, className }: { product: Product; classNam
       />
       <div
         role="img"
-        aria-label={`${product.name} — 250 g bag of Mahvé Coffee`}
+        aria-label={`${product.name} — illustrated bag of Mahvé Coffee`}
         className="relative flex aspect-[3/4] h-[84%] flex-col items-center overflow-hidden rounded-[16px_16px_22px_22px] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)]"
         style={{
           background: `linear-gradient(165deg, color-mix(in oklab, ${product.accent} 55%, #0b0907) 0%, color-mix(in oklab, ${product.accent} 30%, #0b0907) 55%, #0b0907 115%)`,
@@ -39,7 +39,7 @@ export function BagFallback({ product, className }: { product: Product; classNam
           {product.devanagari}
         </p>
         <p className="mt-auto mb-[9%] font-caps text-[clamp(0.35rem,0.7vw,0.5rem)] tracking-[0.35em] text-parchment/70">
-          {product.roast.split("·")[0].trim()} · 250 g
+          {product.roast.split("·")[0].trim()}
         </p>
         {/* Soft sheen down the left of the pouch. */}
         <div aria-hidden className="pointer-events-none absolute inset-y-0 left-[10%] w-[16%] bg-gradient-to-r from-transparent via-white/8 to-transparent blur-md" />

@@ -18,6 +18,10 @@ import { gsap, SplitText, useGSAP } from "@/lib/gsap";
 const SEQUENCES = { landscape: heroSequence.landscape, portrait: heroSequence.portrait };
 const HAS_FRAMES = SEQUENCES.landscape.frames > 0;
 const HAS_PORTRAIT = SEQUENCES.portrait.frames > 0;
+// Describe what is actually on screen: the Higgsfield film, or the drawn stand-in.
+const HERO_LABEL = HAS_FRAMES
+  ? "A single unbroken shot: dawn over the Himalaya, down through deodar forest to a hill village, beans roasting in brass, and espresso poured into glass."
+  : "Illustrated Himalayan ridges moving from night to dusk as you scroll.";
 
 /** Timeline units: the whole scroll distance maps onto 0 → 10. Chapter i owns [start, end]. */
 const CHAPTER_SLOTS: Array<[number, number]> = [
@@ -112,7 +116,7 @@ export function Hero() {
       <section
         ref={sectionRef}
         id="top"
-        aria-label={`${brand.fullName} — from the Himalaya to your cup`}
+        aria-label={`${brand.fullName} — ${brand.tagline}`}
         className="relative h-[420svh] bg-ink md:h-[520svh]"
       >
         <div className="sticky top-0 h-svh w-full overflow-hidden">
@@ -136,7 +140,7 @@ export function Hero() {
             fallback={createHimalayaScene}
             onLoadProgress={setLoadProgress}
             onReady={handleReady}
-            label="A single unbroken shot: dawn over the Himalaya, down through deodar forest to a hill village, beans roasting in brass, and espresso poured into glass."
+            label={HERO_LABEL}
             className="absolute inset-0"
           />
 
@@ -148,7 +152,6 @@ export function Hero() {
             <div data-hero-emblem>
               <Emblem decorative className="mb-5 size-20 md:mb-7 md:size-28" />
             </div>
-            <p className="eyebrow mb-5 md:mb-7">Himalayan specialty coffee</p>
             <h1 data-hero-title className="font-caps text-[clamp(3.6rem,15vw,13.5rem)] font-normal leading-[0.9] tracking-[0.1em] text-cream text-shadow-soft">
               MAHVÉ
             </h1>

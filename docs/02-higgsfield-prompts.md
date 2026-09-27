@@ -146,6 +146,8 @@ Attach your original logo image as the reference.
 
 ### Packshot template (fill in the brackets)
 
+> The coffee names and colours below belong to the **placeholder lineup** in `src/content/products.ts`. Use your real product names on the packs. A generated label is artwork, not product information.
+
 > Premium studio packshot of a single matte stand-up coffee pouch in deep [COLOUR], standing on a slab of dark slate. Across the upper part of the pouch runs a printed band of hand-woven Kullu shawl pattern: rust rails, saffron sawtooth and brass-gold and deodar-green diamond lozenges. Below it, a brushed-brass foil emblem (Himalayan peaks, a small sun and a monogram M), the word "MAHVÉ" in small widely spaced capitals, and "[NAME]" in an elegant italic serif. A few [PROPS] scattered at the base. Background pure charcoal black (#0b0907) with a soft warm rim light from behind and a faint [COLOUR] glow. Centred, the pouch filling about 70 % of the frame height, 4:5 vertical, photoreal, perfectly legible label.
 
 | ID | [NAME] | [COLOUR] | [PROPS] | Output |

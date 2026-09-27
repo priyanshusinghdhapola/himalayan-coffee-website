@@ -8,6 +8,7 @@ import { Countdown } from "@/components/ui/Countdown";
 import { Dialog } from "@/components/ui/Dialog";
 import { ArtFallback, MediaImage } from "@/components/ui/MediaImage";
 import { Reveal, SplitHeading } from "@/components/ui/motion";
+import { PlaceholderTag } from "@/components/ui/PlaceholderTag";
 import { WaitlistForm } from "@/components/ui/WaitlistForm";
 import { nextDrop, releases, upcomingIntro, type Release, type ReleaseStatus } from "@/content/upcoming";
 import { gsap, useGSAP } from "@/lib/gsap";
@@ -42,6 +43,8 @@ export function UpcomingContent({ media }: { media: MediaAvailability }) {
   const firstRun = useRef(true);
   const visible = releases.filter((r) => r.kind === tab);
   const open = releases.find((r) => r.slug === openSlug) ?? null;
+  const hasPlaceholders = releases.some((r) => r.placeholder);
+  const drop = nextDrop;
 
   useGSAP(
     () => {
@@ -62,6 +65,7 @@ export function UpcomingContent({ media }: { media: MediaAvailability }) {
           <p className="eyebrow flex items-center gap-3">
             <Rosette /> {upcomingIntro.eyebrow}
           </p>
+          {hasPlaceholders && <PlaceholderTag className="mt-5">Placeholder concepts — not announced products</PlaceholderTag>}
           <SplitHeading id="upcoming-title" className="mt-6 font-display text-5xl font-light leading-[0.95] text-cream text-shadow-soft md:text-7xl lg:text-8xl">
             Upcoming <em className="text-gold-bright">releases</em>
           </SplitHeading>
@@ -70,17 +74,20 @@ export function UpcomingContent({ media }: { media: MediaAvailability }) {
           </Reveal>
         </div>
 
-        <Reveal className="lg:col-span-5">
-          <div className="glass rounded-[28px] p-6 md:p-8">
-            <p className="eyebrow text-[0.6rem]">Next drop</p>
-            <p className="mt-2 font-display text-2xl text-cream md:text-3xl">{nextDrop.name}</p>
-            <Countdown to={nextDrop.date} className="mt-6" />
-            <button type="button" onClick={() => setOpenSlug(nextDrop.slug)} className={buttonClasses("gold", "mt-7")}>
-              <span className="relative z-10">Notify me</span>
-              <ArrowIcon />
-            </button>
-          </div>
-        </Reveal>
+        {/* Countdown only exists once a confirmed date is set in content/upcoming.ts. */}
+        {drop && (
+          <Reveal className="lg:col-span-5">
+            <div className="glass rounded-[28px] p-6 md:p-8">
+              <p className="eyebrow text-[0.6rem]">Next drop</p>
+              <p className="mt-2 font-display text-2xl text-cream md:text-3xl">{drop.name}</p>
+              <Countdown to={drop.date} className="mt-6" />
+              <button type="button" onClick={() => setOpenSlug(drop.slug)} className={buttonClasses("gold", "mt-7")}>
+                <span className="relative z-10">Notify me</span>
+                <ArrowIcon />
+              </button>
+            </div>
+          </Reveal>
+        )}
       </div>
 
       <div role="tablist" aria-label="Release type" className="glass mt-20 inline-flex rounded-full p-1.5">
@@ -136,6 +143,7 @@ export function UpcomingContent({ media }: { media: MediaAvailability }) {
               </div>
             </div>
             <div className="flex flex-1 flex-col p-6 md:p-7">
+              {release.placeholder && <PlaceholderTag className="mb-4">Placeholder concept</PlaceholderTag>}
               <p className="eyebrow text-[0.6rem] text-mist">{release.window}</p>
               <h3 className="mt-3 flex items-baseline gap-3 font-display text-3xl font-light text-cream">
                 {release.name}
@@ -171,6 +179,7 @@ export function UpcomingContent({ media }: { media: MediaAvailability }) {
             </div>
             <div className="p-7 md:p-10">
               <div className="flex flex-wrap items-center gap-3">
+                {open.placeholder && <PlaceholderTag>Placeholder concept — details not verified</PlaceholderTag>}
                 <StatusBadge status={open.status} />
                 <span className="eyebrow text-[0.6rem] text-mist">{open.window}</span>
               </div>
@@ -187,7 +196,7 @@ export function UpcomingContent({ media }: { media: MediaAvailability }) {
                 ))}
               </dl>
               {open.notes && <NoteChips notes={open.notes} className="mt-6" />}
-              <p className="mt-8 text-sm text-mist">First allocations go to the waitlist, 24 hours before anyone else.</p>
+              <p className="mt-8 text-sm text-mist">Leave your email to hear when there&apos;s news about {open.name}.</p>
               <WaitlistForm key={open.slug} list={`upcoming:${open.slug}`} className="mt-4" />
             </div>
           </>

@@ -1,13 +1,15 @@
 import { Emblem } from "@/components/brand/Emblem";
 import { TransitionLink } from "@/components/providers/PageTransition";
 import { WaitlistForm } from "@/components/ui/WaitlistForm";
-import { brand, footer, navLinks } from "@/content/brand";
+import { contact, footer, navLinks } from "@/content/brand";
 import { products } from "@/content/products";
+import { cn } from "@/lib/cn";
 import { FooterRidges } from "./FooterRidges";
 
 const linkClass = "text-sm text-parchment/80 transition-colors duration-300 hover:text-gold-bright";
 
 export function Footer() {
+  const hasContact = Boolean(contact.address || contact.email || contact.wholesaleEmail || contact.socials.length);
   return (
     <footer className="relative overflow-hidden bg-ink pt-28 md:pt-36">
       <div className="mx-auto grid max-w-[1440px] gap-16 px-5 md:px-10 lg:grid-cols-12">
@@ -20,12 +22,12 @@ export function Footer() {
           <WaitlistForm
             list="newsletter"
             cta="Subscribe"
-            successMessage="Welcome to the hills. Your first letter is on its way down the mountain."
+            successMessage="Thank you — you're on the list."
             className="mt-8 max-w-lg"
           />
         </div>
 
-        <nav aria-label="Footer" className="grid grid-cols-2 gap-10 lg:col-span-6 lg:grid-cols-3">
+        <nav aria-label="Footer" className={cn("grid grid-cols-2 gap-10 lg:col-span-6", hasContact ? "lg:grid-cols-3" : "lg:grid-cols-2")}>
           <div>
             <p className="eyebrow text-[0.6rem] text-mist">Explore</p>
             <ul className="mt-5 space-y-3">
@@ -50,27 +52,36 @@ export function Footer() {
               ))}
             </ul>
           </div>
-          <div className="col-span-2 lg:col-span-1">
-            <p className="eyebrow text-[0.6rem] text-mist">Visit</p>
-            <ul className="mt-5 space-y-3">
-              <li className="text-sm leading-relaxed text-parchment/80">{brand.roastery}</li>
-              <li>
-                <a href={`mailto:${brand.email}`} className={linkClass}>
-                  {brand.email}
-                </a>
-              </li>
-              <li>
-                <a href={`mailto:${brand.wholesaleEmail}`} className={linkClass}>
-                  Wholesale & cafés
-                </a>
-              </li>
-              <li>
-                <a href={brand.instagram} target="_blank" rel="noopener noreferrer" className={linkClass}>
-                  Instagram ↗
-                </a>
-              </li>
-            </ul>
-          </div>
+          {/* Only verified details from `contact` in content/brand.ts — the column is omitted while it's empty. */}
+          {hasContact && (
+            <div className="col-span-2 lg:col-span-1">
+              <p className="eyebrow text-[0.6rem] text-mist">Contact</p>
+              <ul className="mt-5 space-y-3">
+                {contact.address && <li className="text-sm leading-relaxed text-parchment/80">{contact.address}</li>}
+                {contact.email && (
+                  <li>
+                    <a href={`mailto:${contact.email}`} className={linkClass}>
+                      {contact.email}
+                    </a>
+                  </li>
+                )}
+                {contact.wholesaleEmail && (
+                  <li>
+                    <a href={`mailto:${contact.wholesaleEmail}`} className={linkClass}>
+                      Wholesale
+                    </a>
+                  </li>
+                )}
+                {contact.socials.map((social) => (
+                  <li key={social.href}>
+                    <a href={social.href} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                      {social.label} ↗
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </nav>
       </div>
 

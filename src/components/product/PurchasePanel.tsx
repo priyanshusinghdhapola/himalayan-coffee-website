@@ -5,12 +5,14 @@ import { Dialog } from "@/components/ui/Dialog";
 import { ArrowIcon, buttonClasses } from "@/components/ui/Button";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { WaitlistForm } from "@/components/ui/WaitlistForm";
-import { formatPrice, grinds, sizes, type Grind, type Product, type Size } from "@/content/products";
+import { formatPrice, type Product } from "@/content/products";
 import { cn } from "@/lib/cn";
 
 const SHOP_URL = process.env.NEXT_PUBLIC_SHOP_URL?.trim() || "";
 
-function Choice<T extends string>({
+const listPart = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+function Choice({
   legend,
   options,
   value,
@@ -18,24 +20,24 @@ function Choice<T extends string>({
   name,
 }: {
   legend: string;
-  options: readonly T[];
-  value: T;
-  onChange: (v: T) => void;
+  options: readonly string[];
+  value: number;
+  onChange: (index: number) => void;
   name: string;
 }) {
   return (
     <fieldset>
       <legend className="eyebrow mb-3 text-[0.6rem] text-mist">{legend}</legend>
       <div className="flex flex-wrap gap-2">
-        {options.map((option) => (
+        {options.map((option, i) => (
           <label
             key={option}
             className={cn(
               "cursor-pointer rounded-full border px-4 py-2 text-xs tracking-wide transition-colors duration-300 has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:outline-gold-bright",
-              value === option ? "border-gold bg-gold text-ink" : "border-gold/25 text-parchment hover:border-gold/60",
+              value === i ? "border-gold bg-gold text-ink" : "border-gold/25 text-parchment hover:border-gold/60",
             )}
           >
-            <input type="radio" name={name} value={option} checked={value === option} onChange={() => onChange(option)} className="sr-only" />
+            <input type="radio" name={name} value={option} checked={value === i} onChange={() => onChange(i)} className="sr-only" />
             {option}
           </label>
         ))}
@@ -45,58 +47,69 @@ function Choice<T extends string>({
 }
 
 /**
- * Size + grind + price + Buy. "Buy" goes to the product's checkout link for
- * that size (Stripe Payment Link / Shopify permalink), else NEXT_PUBLIC_SHOP_URL,
- * else opens a pre-order sign-up — the button never dead-ends.
+ * Renders only what has been configured in src/content/products.ts:
+ * - sizes/prices from `offers`, grind options from `grinds`;
+ * - "Buy" only for a verified (non-placeholder) product with a checkout link
+ *   (the offer's own, else NEXT_PUBLIC_SHOP_URL);
+ * - otherwise "Notify me", which collects an email via /api/waitlist.
+ * With nothing configured there is no price, no pickers — just the sign-up.
  */
 export function PurchasePanel({ product, className }: { product: Product; className?: string }) {
   const id = useId();
-  const [size, setSize] = useState<Size>("250g");
-  const [grind, setGrind] = useState<Grind>("Whole bean");
-  const [preorderOpen, setPreorderOpen] = useState(false);
-  const checkout = product.checkout[size] || SHOP_URL;
+  const [offerIndex, setOfferIndex] = useState(0);
+  const [grindIndex, setGrindIndex] = useState(0);
+  const [notifyOpen, setNotifyOpen] = useState(false);
+
+  const offer = product.offers[offerIndex];
+  const grind = product.grinds[grindIndex];
+  const checkout = product.placeholder ? "" : offer?.checkoutUrl || SHOP_URL;
+  const selection = [offer?.size, grind].filter(Boolean).join(" · ");
+  const list = ["notify", product.slug, ...(offer ? [listPart(offer.size)] : []), ...(grind ? [listPart(grind)] : [])].join(":");
 
   return (
-    <div className={cn("space-y-6", className)}>
-      <Choice legend="Size" name={`${id}-size`} options={sizes} value={size} onChange={setSize} />
-      <Choice legend="Grind" name={`${id}-grind`} options={grinds} value={grind} onChange={setGrind} />
-      <div className="flex flex-wrap items-center gap-6 pt-2">
-        <p className="font-display text-4xl font-light text-cream" aria-live="polite">
-          {formatPrice(product.prices[size])}
-        </p>
+    <div className={cn("flex flex-col gap-6", className)}>
+      {product.offers.length > 1 && (
+        <Choice legend="Size" name={`${id}-size`} options={product.offers.map((o) => o.size)} value={offerIndex} onChange={setOfferIndex} />
+      )}
+      {product.grinds.length > 0 && (
+        <Choice legend="Grind" name={`${id}-grind`} options={product.grinds} value={grindIndex} onChange={setGrindIndex} />
+      )}
+
+      <div className="flex flex-wrap items-center gap-6">
+        {offer ? (
+          <p className="font-display text-4xl font-light text-cream" aria-live="polite">
+            {formatPrice(offer.price)}
+            {product.offers.length === 1 && <span className="ml-3 font-sans text-sm text-mist">{offer.size}</span>}
+          </p>
+        ) : (
+          <p className="text-sm text-mist">Ordering isn&apos;t open yet.</p>
+        )}
         <Magnetic>
           {checkout ? (
-            <a
-              href={checkout}
-              className={buttonClasses("gold")}
-              data-size={size}
-              data-grind={grind}
-              rel="noopener"
-            >
+            <a href={checkout} className={buttonClasses("gold")} rel="noopener">
               <span className="relative z-10">Buy {product.name}</span>
               <ArrowIcon />
             </a>
           ) : (
-            <button type="button" onClick={() => setPreorderOpen(true)} className={buttonClasses("gold")}>
-              <span className="relative z-10">Pre-order {product.name}</span>
+            <button type="button" onClick={() => setNotifyOpen(true)} className={buttonClasses("gold")}>
+              <span className="relative z-10">Notify me</span>
               <ArrowIcon />
             </button>
           )}
         </Magnetic>
       </div>
-      <p className="text-xs text-smoke">Roasted to order every Monday · Ships within 48 hours · Free shipping over ₹1,500</p>
 
-      <Dialog open={preorderOpen} onClose={() => setPreorderOpen(false)} labelledBy={`${id}-preorder`}>
+      <Dialog open={notifyOpen} onClose={() => setNotifyOpen(false)} labelledBy={`${id}-notify`}>
         <div className="p-8 md:p-12">
-          <p className="eyebrow">Pre-order</p>
-          <h2 id={`${id}-preorder`} className="mt-3 font-display text-4xl font-light text-cream md:text-5xl">
-            {product.name}, <em className="text-gold-bright">{size}</em> · {grind.toLowerCase()}
+          <p className="eyebrow">Notify me</p>
+          <h2 id={`${id}-notify`} className="mt-3 font-display text-4xl font-light text-cream md:text-5xl">
+            {product.name}
+            {selection && <em className="ml-3 text-2xl text-gold-bright md:text-3xl">{selection}</em>}
           </h2>
           <p className="mt-4 max-w-md text-mist">
-            Our first roast of {product.name} is being allocated now. Leave your email and we&apos;ll send a private checkout link the
-            morning it comes off the roaster.
+            Leave your email and we&apos;ll let you know when {product.name} is available to order.
           </p>
-          <WaitlistForm list={`preorder:${product.slug}:${size}:${grind}`} cta="Reserve my bag" className="mt-8" />
+          <WaitlistForm key={list} list={list} cta="Notify me" className="mt-8" />
         </div>
       </Dialog>
     </div>

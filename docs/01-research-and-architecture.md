@@ -24,11 +24,11 @@ Sources: [GSAP — image sequence scrub helper](https://gsap.com/docs/v3/HelperF
 
 ### Himalayan coffee — grounding the story
 
-Coffee does grow in the Himalaya: across the eastern foothills of **Nagaland, Arunachal Pradesh and Meghalaya**. Naga arabica is grown up to about 1,800 m and micro-lots cup at 84–87 SCA points, which is specialty grade. The western Himalaya (Himachal, Uttarakhand) hasn't adopted coffee at scale. Mahvé's copy therefore sources from the east and borrows its **culture and craft** from the Pahari west. That is honest and still distinctive.
+Coffee does grow in the Himalaya: across the eastern foothills of **Nagaland, Arunachal Pradesh and Meghalaya**. Naga arabica is grown up to about 1,800 m and micro-lots cup at 84–87 SCA points, which is specialty grade. The western Himalaya (Himachal, Uttarakhand) hasn't adopted coffee at scale. The draft copy therefore places sourcing in the east and borrows its **culture and craft** from the Pahari west.
 
 Sources: [Grey Soul — Nagaland specialty coffee](https://greysoul.coffee/en-us/blogs/news/a-new-terroir-nagaland-specialty-coffe) · [Coffee regions of India](https://www.indiancoffeebeans.com/learn/coffee-regions-of-india-complete-guide) · [Higgsfield — model guide](https://higgsfield.ai/creator-hub/help-center/ai-models/which-ai-model-should-i-use) · [Higgsfield camera controls](https://higgsfield.ai/camera-controls)
 
-> All origins, altitudes, varietals and prices in `src/content/` are **placeholders written to be plausible**. Replace them with your real sourcing before launch.
+> None of this research is presented on the site as fact about Mahvé. Draft sourcing, process and product copy is visibly labelled **Placeholder**. Contact details, prices, sizes, checkout links, dates and headline figures are left empty until you supply verified ones. See `docs/03-deployment.md` §3.
 
 ---
 

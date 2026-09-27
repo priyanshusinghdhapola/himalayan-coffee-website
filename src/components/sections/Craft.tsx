@@ -1,6 +1,7 @@
 import { Rosette } from "@/components/brand/Rosette";
 import { ArtFallback, MediaImage } from "@/components/ui/MediaImage";
 import { Reveal, SplitHeading } from "@/components/ui/motion";
+import { PlaceholderTag } from "@/components/ui/PlaceholderTag";
 import { craftIntro, craftSteps } from "@/content/craft";
 import type { MediaAvailability } from "@/lib/media";
 import { cn } from "@/lib/cn";
@@ -27,6 +28,7 @@ export function Craft({ media }: { media: MediaAvailability }) {
         <p className="eyebrow flex items-center gap-3">
           <Rosette /> {craftIntro.eyebrow}
         </p>
+        {craftIntro.placeholder && <PlaceholderTag className="mt-5">Placeholder copy — process steps not yet verified</PlaceholderTag>}
         <div className="mt-6 grid gap-8 lg:grid-cols-12 lg:items-end">
           <SplitHeading id="craft-title" className="font-display text-5xl font-light leading-[0.95] text-cream md:text-7xl lg:col-span-7 lg:text-8xl">
             Slow by <em className="text-gold-bright">design</em>

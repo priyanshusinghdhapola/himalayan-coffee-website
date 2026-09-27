@@ -4,6 +4,12 @@ export type ReleaseStatus = "Concept" | "In development" | "Final tastings" | "L
 
 export type Release = {
   slug: string;
+  /**
+   * PLACEHOLDER flag. While true the card and its dialog carry a visible
+   * "Placeholder" label. Set to false only once the release, its status,
+   * timing and every detail are confirmed.
+   */
+  placeholder: boolean;
   kind: "blend" | "object";
   name: string;
   devanagari?: string;
@@ -16,21 +22,24 @@ export type Release = {
   image: MediaId;
 };
 
-/** Hero countdown in the Upcoming section. PLACEHOLDER date & product. */
-export const nextDrop = {
-  slug: "kesar-kahwa",
-  name: "Kesar Kahwa — Festive Edition",
-  date: "2026-11-01T10:00:00+05:30",
-};
+/**
+ * Countdown card in the Upcoming section. Empty until you have a confirmed
+ * release date — the card is not shown while this is null.
+ * Example shape: { slug: "<release slug>", name: "<display name>", date: "2027-01-15T10:00:00+05:30" }
+ */
+export const nextDrop: { slug: string; name: string; date: string } | null = null;
 
 export const upcomingIntro = {
   eyebrow: "Coming down the mountain",
   title: "Upcoming releases",
-  body: "Concept blends and objects in development at the Mahvé roastery. Allocations are small and always go to the waitlist first.",
+  body: "Blends and objects we are exploring. Join the waitlist for any of them to hear when there is news.",
 };
 
+// PLACEHOLDER CONCEPTS — names, statuses, timing, partners, edition sizes and
+// details are drafts, not announcements. Edit or remove, then set placeholder: false.
 export const releases: Release[] = [
   {
+    placeholder: true,
     slug: "kesar-kahwa",
     kind: "blend",
     name: "Kesar Kahwa",
@@ -49,6 +58,7 @@ export const releases: Release[] = [
     image: "U4",
   },
   {
+    placeholder: true,
     slug: "kinnaur-apple-cask",
     kind: "blend",
     name: "Kinnaur Apple Cask",
@@ -66,6 +76,7 @@ export const releases: Release[] = [
     image: "U2",
   },
   {
+    placeholder: true,
     slug: "bugyal-reserve",
     kind: "blend",
     name: "Bugyal Reserve",
@@ -84,6 +95,7 @@ export const releases: Release[] = [
     image: "U3",
   },
   {
+    placeholder: true,
     slug: "brass-dripper",
     kind: "object",
     name: "The Brass Dripper",
@@ -100,6 +112,7 @@ export const releases: Release[] = [
     image: "U5",
   },
   {
+    placeholder: true,
     slug: "kullu-brew-kit",
     kind: "object",
     name: "Kullu Weave Brew Kit",
@@ -116,6 +129,7 @@ export const releases: Release[] = [
     image: "U6",
   },
   {
+    placeholder: true,
     slug: "deodar-slate-set",
     kind: "object",
     name: "Deodar & Slate Set",

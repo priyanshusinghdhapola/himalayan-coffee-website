@@ -67,16 +67,29 @@ npm run media:loop -- --crossfade 0               # your loop already starts and
 
 ---
 
-## 3. Replace the placeholders
+## 3. Supply your verified business details
 
-| File | What to change |
-|---|---|
-| `src\content\brand.ts` | Email addresses, roastery location, Instagram URL, story copy and stats |
-| `src\content\products.ts` | Real origins, altitudes, varietals, prices, and checkout links per size (Stripe Payment Links, Shopify cart permalinks or Razorpay pages) |
-| `src\content\upcoming.ts` | Releases, statuses, and the `nextDrop` countdown date |
-| `src\content\craft.ts` | Bento copy |
+The site ships with **no unverified business details presented as fact**. There are two mechanisms:
 
-If a product/size has no checkout link, its Buy button becomes **Pre-order** and collects an email instead.
+- **Empty until you fill them in:** these fields are not rendered at all while empty. That covers contact details, prices, sizes, grind options, checkout links, the countdown date and headline stats.
+- **`placeholder: true`:** draft copy stays visible but carries a **"Placeholder" label** on the page. Placeholder product pages are also kept out of search results and the sitemap, and emit no Product structured data. Set the flag to `false` only after every detail in that record is true.
+
+| File | Field | Currently | What to do |
+|---|---|---|---|
+| `src\content\brand.ts` | `contact.email`, `contact.wholesaleEmail`, `contact.address`, `contact.socials` | empty — footer contact column hidden | Add real details; each appears in the footer (and email/socials in structured data) once set |
+| | `story.paragraphs` + `story.placeholder` | draft, labelled | Rewrite with your real story (sourcing, growers, process), then `placeholder: false` |
+| | `story.stats` | empty — stats panel hidden | Add only figures you can stand behind |
+| `src\content\products.ts` | every product's details + `placeholder` | draft lineup, labelled | Replace names, origins, altitudes, varietals, process, harvest, notes, scores, recipes — or delete coffees you won't sell |
+| | `offers` (`size`, `price`, `checkoutUrl`) | empty — no price shown, button is **Notify me** | Add each real size and price; `checkoutUrl` = your payment page (Stripe Payment Link, Shopify permalink, Razorpay…) |
+| | `grinds` | empty — no grind picker | List the grind options you actually offer |
+| | `CURRENCY` | `"INR"` (not shown until prices exist) | Confirm or change before adding prices |
+| `src\content\upcoming.ts` | each release + `placeholder` | draft concepts, labelled | Edit or delete; statuses, timing and partner/edition details must be real |
+| | `nextDrop` | `null` — countdown hidden | Add `{ slug, name, date }` only for a confirmed release date |
+| `src\content\craft.ts` | `craftSteps` + `craftIntro.placeholder` | draft, labelled | Describe your real process, then `placeholder: false` |
+
+**Buy buttons** appear only for a product with `placeholder: false` **and** a checkout link: the offer's own `checkoutUrl`, or `NEXT_PUBLIC_SHOP_URL`. Every other product shows **Notify me**, which collects an email.
+
+Before launch, search the live site for the word "Placeholder". Every label you still see marks copy that isn't verified yet.
 
 ---
 
@@ -118,10 +131,10 @@ git push -u origin main
 
    | Name | Value | Notes |
    |---|---|---|
-   | `NEXT_PUBLIC_SITE_URL` | `https://your-domain.com` | Canonical URL for SEO, sitemap and social cards |
+   | `NEXT_PUBLIC_SITE_URL` | your real domain, e.g. `https://www.<your-domain>` | Canonical URL for SEO, sitemap and social cards. Optional: if unset (or invalid), the build uses Vercel's production domain automatically and warns instead of failing |
    | `NEXT_PUBLIC_MEDIA_VERSION` | `1` | Bump to `2`, `3` … whenever you **replace** media files |
    | `WAITLIST_WEBHOOK_URL` | your webhook | Where sign-ups are sent (see §6). Without it, sign-ups are only logged |
-   | `NEXT_PUBLIC_SHOP_URL` | optional | Fallback store link for Buy buttons |
+   | `NEXT_PUBLIC_SHOP_URL` | optional | Your real store URL. Used as the Buy link for verified products whose offers have no `checkoutUrl` |
    | `NEXT_PUBLIC_MEDIA_BASE_URL` | optional | Only if media is hosted on a CDN (see §7) |
 
 4. Click **Deploy**. Every page is prerendered, so the build takes about a minute.
@@ -148,10 +161,10 @@ Set the environment variables with `vercel env add NEXT_PUBLIC_SITE_URL` etc., o
 
 ## 6. Collecting waitlist and pre-order sign-ups
 
-All forms (newsletter, *Notify me*, *Pre-order*) POST to `/api/waitlist`, which validates the email, drops bots via a honeypot field, and forwards JSON like this to `WAITLIST_WEBHOOK_URL`:
+All forms (newsletter and *Notify me*) POST to `/api/waitlist`, which validates the email, drops bots via a honeypot field, and forwards JSON like this to `WAITLIST_WEBHOOK_URL`:
 
 ```json
-{ "email": "a@b.com", "list": "preorder:kafal:250g:Whole bean", "createdAt": "2026-10-01T09:00:00.000Z", "source": "mahve-web" }
+{ "email": "a@b.com", "list": "notify:kafal", "createdAt": "2026-10-01T09:00:00.000Z", "source": "mahve-web" }
 ```
 
 The quickest set-ups:
@@ -175,7 +188,8 @@ Vercel serves `public\` from its global CDN, which is ideal. Very large media fo
 
 - [ ] `npm run media:check` shows everything in place (or you're happy with the fallbacks)
 - [ ] `npm run lint` and `npm run build` pass locally
-- [ ] Placeholders in `src\content\*` replaced; prices and checkout links tested with a real purchase
+- [ ] No "Placeholder" labels left on the site, or you've consciously decided to launch with them visible (§3)
+- [ ] Contact details, prices and checkout links added only where verified, and each checkout link tested with a real purchase
 - [ ] `WAITLIST_WEBHOOK_URL` set, and a test sign-up arrives in your sheet or email tool
 - [ ] Tested on a real iPhone (Safari) and Android phone: hero scrub, loop autoplay, menu, dialogs
 - [ ] Tested with *Reduce motion* switched on (OS accessibility settings)

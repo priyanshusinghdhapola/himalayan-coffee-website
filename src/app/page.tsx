@@ -6,7 +6,8 @@ import { Hero } from "@/components/sections/Hero";
 import { Marquee } from "@/components/sections/Marquee";
 import { Story } from "@/components/sections/Story";
 import { Upcoming } from "@/components/sections/Upcoming";
-import { brand, marqueeWords, siteUrl } from "@/content/brand";
+import { brand, contact, marqueeWords } from "@/content/brand";
+import { siteUrl } from "@/lib/site-url";
 import type { MediaId } from "@/lib/media";
 import { mediaAvailability } from "@/lib/media-server";
 
@@ -28,11 +29,11 @@ export default function HomePage() {
           "@type": "Organization",
           name: brand.fullName,
           slogan: `${brand.tagline}. ${brand.taglineSecond}.`,
-          description: brand.description,
           url: siteUrl,
           logo: `${siteUrl}/icon.svg`,
-          email: brand.email,
-          sameAs: [brand.instagram],
+          // Contact details only when verified ones are configured in content/brand.ts.
+          ...(contact.email ? { email: contact.email } : {}),
+          ...(contact.socials.length ? { sameAs: contact.socials.map((s) => s.href) } : {}),
         }}
       />
     </>

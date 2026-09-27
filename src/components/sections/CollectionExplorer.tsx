@@ -7,6 +7,7 @@ import { PurchasePanel } from "@/components/product/PurchasePanel";
 import { TransitionLink } from "@/components/providers/PageTransition";
 import { ArrowIcon, buttonClasses } from "@/components/ui/Button";
 import { MediaImage } from "@/components/ui/MediaImage";
+import { PlaceholderTag } from "@/components/ui/PlaceholderTag";
 import type { Product } from "@/content/products";
 import { gsap, useGSAP } from "@/lib/gsap";
 import type { MediaAvailability } from "@/lib/media";
@@ -138,7 +139,7 @@ export function CollectionExplorer({ products, media }: CollectionExplorerProps)
                     <MediaImage
                       id={p.pack}
                       available={media[p.pack]}
-                      alt={`${p.name} — ${p.roast}, 250 g bag`}
+                      alt={`${p.name} — bag of Mahvé Coffee`}
                       sizes="(min-width: 1024px) 45vw, 92vw"
                       className="object-contain p-[8%]"
                       fallback={<BagFallback product={p} />}
@@ -187,6 +188,11 @@ export function CollectionExplorer({ products, media }: CollectionExplorerProps)
         </div>
 
         <div id="coffee-panel" role="tabpanel" aria-labelledby={`coffee-tab-${product.slug}`} className="mt-10">
+          {product.placeholder && (
+            <div data-detail className="mb-5">
+              <PlaceholderTag>Placeholder — details not verified</PlaceholderTag>
+            </div>
+          )}
           <p data-detail className="eyebrow">
             {product.roast} · {product.process}
           </p>

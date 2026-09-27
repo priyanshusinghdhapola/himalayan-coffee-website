@@ -1,7 +1,20 @@
 import type { NextConfig } from "next";
+import { parseHttpUrl } from "./src/lib/env-url";
 
-const mediaBase = process.env.NEXT_PUBLIC_MEDIA_BASE_URL?.trim();
-const remoteMedia = mediaBase ? new URL(mediaBase) : null;
+// Misconfigured URL variables must never fail the build — they're ignored
+// with a warning and the app falls back (see src/lib/site-url.ts, src/lib/media.ts).
+const URL_VARS = {
+  NEXT_PUBLIC_SITE_URL: "falling back to the Vercel production domain (or localhost)",
+  NEXT_PUBLIC_MEDIA_BASE_URL: "serving media from /public instead",
+} as const;
+for (const [name, fallback] of Object.entries(URL_VARS)) {
+  const raw = process.env[name];
+  if (raw?.trim() && !parseHttpUrl(raw)) {
+    console.warn(`⚠ ${name}=${JSON.stringify(raw)} is not a usable http(s) URL — ${fallback}.`);
+  }
+}
+
+const remoteMedia = parseHttpUrl(process.env.NEXT_PUBLIC_MEDIA_BASE_URL);
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -26,6 +39,7 @@ const nextConfig: NextConfig = {
           {
             protocol: remoteMedia.protocol.replace(":", "") as "http" | "https",
             hostname: remoteMedia.hostname,
+            port: remoteMedia.port,
             pathname: `${remoteMedia.pathname.replace(/\/$/, "")}/media/**`,
           },
         ]

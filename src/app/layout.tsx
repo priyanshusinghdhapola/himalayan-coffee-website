@@ -6,7 +6,8 @@ import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { PageTransitionProvider } from "@/components/providers/PageTransition";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
-import { brand, siteUrl } from "@/content/brand";
+import { brand } from "@/content/brand";
+import { siteUrl } from "@/lib/site-url";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -46,7 +47,6 @@ export const metadata: Metadata = {
   },
   description: brand.description,
   applicationName: brand.fullName,
-  keywords: ["Himalayan coffee", "specialty coffee India", "Nagaland coffee", "single origin", "Pahari", "Mahvé"],
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -54,7 +54,6 @@ export const metadata: Metadata = {
     title: `${brand.fullName} — ${brand.tagline}`,
     description: brand.description,
     url: "/",
-    locale: "en_IN",
   },
   twitter: {
     card: "summary_large_image",

@@ -1,9 +1,11 @@
 import registry from "@/config/media-registry.json";
+import { toBaseUrl } from "@/lib/env-url";
 
 export type MediaId = keyof typeof registry.assets;
 export type MediaAvailability = Partial<Record<MediaId, boolean>>;
 
-const BASE = (process.env.NEXT_PUBLIC_MEDIA_BASE_URL ?? "").trim().replace(/\/$/, "");
+// An unusable CDN value falls back to serving from /public (next.config.ts warns).
+const BASE = toBaseUrl(process.env.NEXT_PUBLIC_MEDIA_BASE_URL) ?? "";
 const VERSION = (process.env.NEXT_PUBLIC_MEDIA_VERSION ?? "1").trim() || "1";
 
 /**

@@ -9,8 +9,10 @@ import { TransitionLink } from "@/components/providers/PageTransition";
 import { ArrowIcon, buttonClasses } from "@/components/ui/Button";
 import { ArtFallback, MediaImage } from "@/components/ui/MediaImage";
 import { Parallax, Reveal, SplitHeading } from "@/components/ui/motion";
-import { brand, siteUrl } from "@/content/brand";
-import { getProduct, products } from "@/content/products";
+import { PlaceholderTag } from "@/components/ui/PlaceholderTag";
+import { brand } from "@/content/brand";
+import { siteUrl } from "@/lib/site-url";
+import { CURRENCY, getProduct, products } from "@/content/products";
 import { mediaSrc } from "@/lib/media";
 import { mediaAvailability } from "@/lib/media-server";
 
@@ -26,13 +28,17 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const { slug } = await params;
   const product = getProduct(slug);
   if (!product) return {};
-  const title = `${product.name} — ${product.roast}`;
-  const description = `${product.headline} ${product.notes.join(", ")}. ${product.origin}, ${product.altitude}.`;
+  const title = product.name;
+  // Placeholder details never go into search snippets or social previews.
+  const description = product.placeholder
+    ? `${product.name} — ${brand.fullName}.`
+    : `${product.headline} ${product.notes.join(", ")}. ${product.origin}, ${product.altitude}.`;
   return {
     title,
     description,
     alternates: { canonical: `/coffee/${product.slug}` },
     openGraph: { title: `${title} · ${brand.fullName}`, description, url: `/coffee/${product.slug}` },
+    ...(product.placeholder ? { robots: { index: false, follow: true } } : {}),
   };
 }
 
@@ -69,7 +75,7 @@ export default async function CoffeePage({ params }: { params: Promise<Params> }
               <MediaImage
                 id={product.pack}
                 available={media[product.pack]}
-                alt={`${product.name} — ${product.roast}, 250 g bag`}
+                alt={`${product.name} — bag of Mahvé Coffee`}
                 sizes="(min-width: 1024px) 38vw, 92vw"
                 preload
                 className="object-contain p-[8%]"
@@ -79,6 +85,9 @@ export default async function CoffeePage({ params }: { params: Promise<Params> }
           </div>
 
           <div className="lg:col-span-7 lg:pt-20">
+            {product.placeholder && (
+              <PlaceholderTag className="mb-5">Placeholder — origin, notes, process and recipes not verified</PlaceholderTag>
+            )}
             <p className="eyebrow flex items-center gap-3">
               <Rosette /> {product.index} · {product.roast} · {product.process}
             </p>
@@ -164,25 +173,28 @@ export default async function CoffeePage({ params }: { params: Promise<Params> }
         </div>
       </section>
 
-      <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@type": "Product",
-          name: `${brand.fullName} — ${product.name}`,
-          description: product.description,
-          brand: { "@type": "Brand", name: brand.fullName },
-          category: "Coffee",
-          image: media[product.pack] ? `${siteUrl}${mediaSrc(product.pack)}` : undefined,
-          url: `${siteUrl}/coffee/${product.slug}`,
-          offers: {
-            "@type": "AggregateOffer",
-            priceCurrency: "INR",
-            lowPrice: Math.min(...Object.values(product.prices)),
-            highPrice: Math.max(...Object.values(product.prices)),
-            availability: "https://schema.org/PreOrder",
-          },
-        }}
-      />
+      {/* Product structured data only for a verified coffee with real prices — never for placeholders. */}
+      {!product.placeholder && product.offers.length > 0 && (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: `${brand.fullName} — ${product.name}`,
+            description: product.description,
+            brand: { "@type": "Brand", name: brand.fullName },
+            category: "Coffee",
+            image: media[product.pack] ? `${siteUrl}${mediaSrc(product.pack)}` : undefined,
+            url: `${siteUrl}/coffee/${product.slug}`,
+            offers: {
+              "@type": "AggregateOffer",
+              priceCurrency: CURRENCY,
+              offerCount: product.offers.length,
+              lowPrice: Math.min(...product.offers.map((o) => o.price)),
+              highPrice: Math.max(...product.offers.map((o) => o.price)),
+            },
+          }}
+        />
+      )}
     </>
   );
 }

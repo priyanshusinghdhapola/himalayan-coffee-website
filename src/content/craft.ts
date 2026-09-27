@@ -1,11 +1,15 @@
 import type { MediaId } from "@/lib/media";
 
 export const craftIntro = {
+  /** Shows a "Placeholder" label on the section. Set to false once the steps below describe your real process. */
+  placeholder: true,
   eyebrow: "From ridge to cup",
   title: "Slow by design",
   body: "Four steps, none of them hurried. The hills set the pace — we simply follow it.",
 };
 
+// PLACEHOLDER — the process steps below (hand-picking, drying, batch size,
+// packing time) are drafts, not verified facts.
 export const craftSteps: {
   index: string;
   title: string;

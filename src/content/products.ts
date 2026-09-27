@@ -1,14 +1,29 @@
 import type { MediaId } from "@/lib/media";
 
-export type Size = "250g" | "500g" | "1kg";
-export type Grind = "Whole bean" | "Espresso" | "Filter" | "French press";
+/**
+ * A size you actually sell. Price is in CURRENCY below. checkoutUrl is the
+ * real payment page for this size (Stripe Payment Link, Shopify cart
+ * permalink, Razorpay page…); without one, the button collects a sign-up.
+ */
+export type Offer = { size: string; price: number; checkoutUrl?: string };
+
+/** Currency used to display the prices you add. Confirm before adding offers. */
+export const CURRENCY = "INR";
 
 export type Product = {
   slug: string;
   index: string;
+  /**
+   * PLACEHOLDER flag. While true, the site labels this coffee as a
+   * placeholder, keeps its page out of search results and the sitemap, and
+   * emits no Product structured data. Set to false only once every detail
+   * below is verified.
+   */
+  placeholder: boolean;
   name: string;
   /** Devanagari spelling — shown as a Pahari accent next to the name. */
   devanagari: string;
+  /** What the name means (a fact about the word, not the coffee). */
   meaning: string;
   roast: string;
   /** 1 (lightest) – 5 (darkest). */
@@ -23,27 +38,23 @@ export type Product = {
   description: string;
   profile: { acidity: number; sweetness: number; body: number; finish: number };
   brew: { method: string; recipe: string }[];
-  /** INR prices per size. */
-  prices: Record<Size, number>;
-  /**
-   * Checkout links per size — Stripe Payment Links, Shopify cart permalinks,
-   * Razorpay pages… Leave empty and the Buy button opens a pre-order sign-up.
-   */
-  checkout: Partial<Record<Size, string>>;
+  /** Verified sizes and prices only. Empty = no price shown; the button becomes "Notify me". */
+  offers: Offer[];
+  /** Grind options you actually offer. Empty = no grind selector. */
+  grinds: string[];
   accent: string;
   pack: MediaId;
   scene: MediaId;
 };
 
-export const sizes: Size[] = ["250g", "500g", "1kg"];
-export const grinds: Grind[] = ["Whole bean", "Espresso", "Filter", "French press"];
-
-// PLACEHOLDER lots: origins, altitudes, varietals, prices and checkout links
-// must be replaced with your real green-coffee sourcing before launch.
+// PLACEHOLDER LINEUP — names are Pahari words; every origin, altitude, varietal,
+// process, harvest window, tasting note, score and recipe below is a draft,
+// not a fact. Replace per coffee, then set placeholder: false.
 export const products: Product[] = [
   {
     slug: "buransh",
     index: "01",
+    placeholder: true,
     name: "Buransh",
     devanagari: "बुरांश",
     meaning: "The crimson rhododendron that blooms across the hills each spring.",
@@ -63,8 +74,8 @@ export const products: Product[] = [
       { method: "V60 pour-over", recipe: "15 g · 250 ml · 93 °C · 2:45" },
       { method: "Chemex", recipe: "30 g · 480 ml · 94 °C · 4:30" },
     ],
-    prices: { "250g": 1150, "500g": 2150, "1kg": 3950 },
-    checkout: {},
+    offers: [],
+    grinds: [],
     accent: "#b6453f",
     pack: "P1",
     scene: "P1S",
@@ -72,6 +83,7 @@ export const products: Product[] = [
   {
     slug: "kafal",
     index: "02",
+    placeholder: true,
     name: "Kafal",
     devanagari: "काफल",
     meaning: "The wild Himalayan bayberry children pick along forest trails in May.",
@@ -91,8 +103,8 @@ export const products: Product[] = [
       { method: "AeroPress", recipe: "16 g · 230 ml · 90 °C · 1:45" },
       { method: "V60 pour-over", recipe: "15 g · 240 ml · 92 °C · 2:40" },
     ],
-    prices: { "250g": 1350, "500g": 2550, "1kg": 4700 },
-    checkout: {},
+    offers: [],
+    grinds: [],
     accent: "#7a2e3a",
     pack: "P2",
     scene: "P2S",
@@ -100,6 +112,7 @@ export const products: Product[] = [
   {
     slug: "deodar",
     index: "03",
+    placeholder: true,
     name: "Deodar",
     devanagari: "देवदार",
     meaning: "The Himalayan cedar — the “timber of the gods”.",
@@ -119,8 +132,8 @@ export const products: Product[] = [
       { method: "Moka pot", recipe: "18 g · fine-medium · off the boil" },
       { method: "French press", recipe: "30 g · 500 ml · 94 °C · 4:00" },
     ],
-    prices: { "250g": 950, "500g": 1780, "1kg": 3250 },
-    checkout: {},
+    offers: [],
+    grinds: [],
     accent: "#4f6b58",
     pack: "P3",
     scene: "P3S",
@@ -128,6 +141,7 @@ export const products: Product[] = [
   {
     slug: "dhauladhar",
     index: "04",
+    placeholder: true,
     name: "Dhauladhar",
     devanagari: "धौलाधार",
     meaning: "“The white ridge” that watches over the Kangra valley.",
@@ -147,8 +161,8 @@ export const products: Product[] = [
       { method: "Espresso", recipe: "18 g in · 38 g out · 28 s · 93 °C" },
       { method: "Flat white", recipe: "Double shot · 120 ml silky milk" },
     ],
-    prices: { "250g": 890, "500g": 1690, "1kg": 3090 },
-    checkout: {},
+    offers: [],
+    grinds: [],
     accent: "#c9a46a",
     pack: "P4",
     scene: "P4S",
@@ -159,6 +173,6 @@ export function getProduct(slug: string) {
   return products.find((p) => p.slug === slug);
 }
 
-export function formatPrice(inr: number) {
-  return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(inr);
+export function formatPrice(amount: number) {
+  return new Intl.NumberFormat("en-IN", { style: "currency", currency: CURRENCY, maximumFractionDigits: 0 }).format(amount);
 }
